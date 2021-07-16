@@ -1,0 +1,60 @@
+{
+  "status": "online",
+  "activity": {
+    "type": 3,
+    "prefix": ".help｜",
+    "default_text": "全新改版~☆"
+  },
+  "prefix": ".",
+  "cogs": [
+    "cogs.admin",
+    "cogs.rubiBank",
+    "cogs.character",
+    "cogs.profileCard",
+    "cogs.common",
+    "cogs.newsForward",
+    "cogs.preferences",
+    "cogs.clan",
+    "cogs.response",
+    "cogs.tasks"
+  ],
+  "helpTitle": "哈囉~ 歡迎使用 AI キャル",
+  "AssetsURL": "https://randosoru.me/static/assets",
+  "RediveJP_DB": [
+    "https://redive.estertion.win/db/redive_jp.db.br",
+    "https://redive.estertion.win/last_version_jp.json"
+  ],
+  "RediveTW_DB": [
+    "https://randosoru.me/redive_db/redive_tw.db.br",
+    "https://randosoru.me/redive_db/version.json"
+  ],
+  "keywordGSheet": {
+    "key": "",
+    "gid": ""
+  },
+  "DEBUG_CHANNEL": null,
+  "MONGODB_URL": "mongodb://username:password@host:port",
+  "GUILD_API_URL": "https://guild.randosoru.me/api",
+  "GUILD_API_TOKEN": "GUILD_API_TOKEN",
+  "GAME_API_URL": "https://example.com",
+  "GAME_API_TOKEN": "GAME_API_TOKEN",
+  "PCRwiki": "https://pcredivewiki.tw/Character/Detail",
+  "EmojiServers": {
+    "1": [],
+    "2": [],
+    "3": [],
+    "Pickup": []
+  },
+  "RankData": {
+    "emonight": {
+      "key": "",
+      "gid": "",
+      "sql": "select%20*"
+    },
+    "nonplume": {
+      "key": "",
+      "gid": "",
+      "sql": "select%20*"
+    }
+  }
+}
