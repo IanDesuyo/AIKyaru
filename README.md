@@ -49,7 +49,7 @@ python3 main.py
 
 首次設定時, 請先參考`config.json.example`內的格式並修改設定值
 
-```json
+```javascript
 {
   "status": "online", // 機器人的上線狀態
   "activity": {
