@@ -3,7 +3,7 @@
   "activity": {
     "type": 3,
     "prefix": ".help｜",
-    "default_text": "全新改版~☆"
+    "default_text": "ヤバイわよ!!"
   },
   "prefix": ".",
   "cogs": [

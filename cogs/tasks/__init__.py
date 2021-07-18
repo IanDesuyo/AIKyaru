@@ -35,7 +35,7 @@ class Tasks(commands.Cog):
 
                 self.logger.info("Starting update task...")
                 await self.bot.config.update()
-                asyncio.sleep(3600)  # wait 1 hour
+                await asyncio.sleep(3660) # wait 1 hour
 
         except asyncio.CancelledError:
             self.logger.info("Update task cancelled.")

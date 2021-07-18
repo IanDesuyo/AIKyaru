@@ -164,7 +164,7 @@ async def create_debug_embed(
         try:
             raise error
         except:
-            tb = "```\n" + traceback.format_exc(limit=2) + "```"
+            tb = traceback.format_exc(limit=2)
             if len(tb) <= 1000:
                 embed.add_field(name="Traceback", value=f"```\n{tb}```", inline=False)
             else:
