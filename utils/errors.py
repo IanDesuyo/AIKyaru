@@ -12,6 +12,14 @@ import utils
 import traceback
 
 
+class GameApiError(Exception):
+    pass
+
+
+class ProfileNotFound(Exception):
+    pass
+
+
 class FormNotSet(Exception):
     pass
 
@@ -71,6 +79,13 @@ async def handle_error(bot: Bot, ctx: Union[Context, SlashContext, ComponentCont
     if isinstance(error, commands.NoPrivateMessage):
         return await ctx.send("此功能僅限群組使用")
 
+    # game api errors
+
+    if isinstance(error, ProfileNotFound):
+        return ctx.send("找不到此玩家... 你還記得你的ID嗎?")
+    if isinstance(error, GameApiError):
+        return ctx.send("看起來查詢用的水晶球暫時故障了... 晚點再試試看吧")
+
     # clan errors
 
     if isinstance(error, FormNotSet):
@@ -78,7 +93,7 @@ async def handle_error(bot: Bot, ctx: Union[Context, SlashContext, ComponentCont
     if isinstance(error, FormNotFound):
         return await ctx.send("找不到此報名表... 或許你打錯字了?")
     if isinstance(error, IncorrectFormId):
-        return await ctx.send("你是不是打錯字了? 報名表ID應該要是32字的UUID")
+        return await ctx.send("你是不是打錯字了? 報名表ID應該要是32字的UUID才對")
     if isinstance(error, IncorrectWeek):
         return await ctx.send("周次要在1~200之內喔")
     if isinstance(error, IncorrectDamage):
@@ -113,13 +128,13 @@ async def create_debug_embed(
     if error:
         description = str(error)
         if isinstance(ctx, Context):
-            title = f"Context: {ctx.command}\n`{ctx.message.content}`"
+            title = f"Context: `{ctx.command}`\n`{ctx.message.content}`"
             ts = ctx.message.created_at
         elif isinstance(ctx, SlashContext):
-            title = f"SlashContext: {ctx.command}\n`{ctx.data}`"
+            title = f"SlashContext: `{ctx.command}`\n`{ctx.data}`"
             ts = ctx.created_at
         elif isinstance(ctx, ComponentContext):
-            title = f"ComponentContext: {ctx.custom_id}\n`{ctx.data}`"
+            title = f"ComponentContext: `{ctx.custom_id}`\n`{ctx.data}`"
             ts = ctx.created_at
     else:
         title = None

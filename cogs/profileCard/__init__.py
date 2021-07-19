@@ -12,7 +12,7 @@ from discord_slash.utils.manage_commands import create_choice, create_option
 import asyncio
 import secrets
 from aiohttp import ClientSession, ClientTimeout
-from utils import create_profile_embed
+from utils import create_profile_embed, errors
 import re
 from copy import deepcopy
 from datetime import datetime
@@ -46,7 +46,9 @@ class ProfileCard(commands.Cog):
         self.logger.info(f"get_profile /{server}/{uid}: {resp.status}")
         
         if resp.status == 404:
-            raise ValueError()
+            raise errors.ProfileNotFound
+        if resp.status == 500:
+            raise errors.GameApiError
 
         return data
 
@@ -126,12 +128,7 @@ class ProfileCard(commands.Cog):
             return await ctx.edit_origin(content="此驗證已過期", components=None)
 
         await ctx.defer(edit_origin=True)
-        try:
-            profile_data = await self.get_profile(data["s"], data["i"], False)
-        except ValueError:
-            return await ctx.edit_origin(content="找不到此玩家", components=None)
-        except Exception as e:
-            raise e
+        profile_data = await self.get_profile(data["s"], data["i"], False)
 
         if str(data["v"]) in profile_data["user_info"]["user_comment"]:
             profile_data["user_info"]["user_comment"] = profile_data["user_info"]["user_comment"].replace(
