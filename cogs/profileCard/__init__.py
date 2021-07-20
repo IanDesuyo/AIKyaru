@@ -44,7 +44,7 @@ class ProfileCard(commands.Cog):
             data = await resp.json()
 
         self.logger.info(f"get_profile /{server}/{uid}: {resp.status}")
-        
+
         if resp.status == 404:
             raise errors.ProfileNotFound
         if resp.status == 500:
@@ -93,18 +93,19 @@ class ProfileCard(commands.Cog):
                 choices=[
                     create_choice(value=1, name="美食殿堂"),
                     create_choice(value=2, name="真步真步王國"),
+                    create_choice(value=3, name="破曉之星"),
+                    create_choice(value=4, name="小小甜心"),
                     # Currently unsupported
-                    # create_choice(value=3, name="破曉之星"),
-                    # create_choice(value=4, name="小小甜心"),
                     # create_choice(value=0, name="日版"),
                 ],
                 required=True,
             ),
             create_option(name="遊戲id", description="9位數ID", option_type=4, required=True),
         ],
+        connector={"伺服器": "server", "遊戲id": "uid"},
     )
-    async def cog_bind(self, ctx: SlashContext, 伺服器: int, 遊戲id: int):
-        await self._bind(ctx, 伺服器, 遊戲id)
+    async def cog_bind(self, ctx: SlashContext, server: int, uid: int):
+        await self._bind(ctx, server, uid)
 
     async def _bind(self, ctx: Union[Context, SlashContext], server: int, uid: int):
         if not re.match(r"^\d{9}$", str(uid)):
