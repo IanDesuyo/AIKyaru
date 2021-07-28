@@ -29,9 +29,10 @@ class Sta(commands.Cog):
                 required=False,
             ),
         ],
+        connector={"當前體力": "sta", "主角等級": "lv"},
     )
-    async def cog_sta(self, ctx: SlashContext, 當前體力: int = 0, 主角等級: int = None):
-        await self._sta(ctx, 當前體力, 主角等級)
+    async def cog_sta(self, ctx: SlashContext, sta: int = 0, lv: int = None):
+        await self._sta(ctx, sta, lv)
 
     async def _sta(self, ctx: Union[Context, SlashContext], sta: int = 0, lv: int = None):
         if not lv:

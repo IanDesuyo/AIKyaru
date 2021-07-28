@@ -10,9 +10,11 @@ from discord_slash import cog_ext, SlashContext
 from cogs.clan.api import Api
 from cogs.clan.embeds import Embeds
 from cogs.clan.options import boss_choices
+from cogs.clan.cbre import Cbre
 from discord_slash.utils.manage_commands import create_option
 from cogs.clan.response import ClanResponse
 import asyncio
+
 
 class Clan(commands.Cog):
     def __init__(self, bot: AIKyaru):
@@ -110,7 +112,9 @@ class Clan(commands.Cog):
         description="查看報名列表",
         options=[
             create_option(name="week", description="指定周次, 預設為群組當前周次", option_type=4, required=False),
-            create_option(name="boss", description="指定Boss", option_type=4, choices=boss_choices, required=False),
+            create_option(
+                name="boss", description="指定Boss, 預設為群組當前Boss", option_type=4, choices=boss_choices, required=False
+            ),
         ],
     )
     @commands.guild_only()
@@ -285,3 +289,4 @@ class Clan(commands.Cog):
 def setup(bot):
     bot.add_cog(Clan(bot))
     bot.add_cog(ClanResponse(bot))
+    bot.add_cog(Cbre(bot))
