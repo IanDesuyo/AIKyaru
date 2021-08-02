@@ -11,7 +11,7 @@ class Tasks(commands.Cog):
         self.bot = bot
         self.logger = logging.getLogger("AIKyaru.Tasks")
         self.loop = asyncio.get_event_loop()
-        
+
         self.task_update_checker = self.loop.create_task(self.update_checker())
 
     def cog_unload(self):
@@ -35,7 +35,11 @@ class Tasks(commands.Cog):
 
                 self.logger.info("Starting update task...")
                 await self.bot.config.update()
-                await asyncio.sleep(3660) # wait 1 hour
+                await asyncio.sleep(5)
+                await self.bot.gameData.tw.analytics()
+                await self.bot.gameData.jp.analytics()
+                await self.bot.config.update_gacha_emojis(self.bot)
+                await asyncio.sleep(3600)  # wait 1 hour
 
         except asyncio.CancelledError:
             self.logger.info("Update task cancelled.")
