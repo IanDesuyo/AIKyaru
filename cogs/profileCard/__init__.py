@@ -78,7 +78,7 @@ class ProfileCard(commands.Cog):
 
     @cmd_profile.command(name="bind", brief="綁定遊戲ID", description="將Discord帳號與遊戲ID綁定", usage="<伺服器(1~4)> <遊戲ID(9位數)>")
     async def cmd_bind(self, ctx: Context, server: int, uid: int):
-        if server < 1 and server > 4:
+        if server < 1 or server > 4:
             return ctx.send("伺服器錯誤, 請輸入1~4")
         await self._bind(ctx, server, uid)
 
@@ -118,7 +118,10 @@ class ProfileCard(commands.Cog):
             custom_id="user.link_uid",
             data={"s": server, "i": uid, "v": verify_code, "t": int(datetime.now().timestamp())},
         )
-        await ctx.send(f"請在遊戲內個人簡介內加入以下代碼 `{verify_code}` , 有效時間2分鐘.", components=[buttons], hidden=True)
+        if isinstance(ctx, SlashContext):
+            await ctx.send(f"請在遊戲內個人簡介內加入以下代碼 `{verify_code}` , 有效時間2分鐘.", components=[buttons], hidden=True)
+        else:
+            await ctx.send(f"請在遊戲內個人簡介內加入以下代碼 `{verify_code}` , 有效時間2分鐘.", components=[buttons])
 
     @cog_ext.cog_component(components="pref_user.link_uid")
     async def pref_user_link_uid(self, ctx: ComponentContext):

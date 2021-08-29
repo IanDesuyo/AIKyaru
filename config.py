@@ -75,7 +75,6 @@ class BotConfig:
                 updated = True
         except:
             self.logger.warning("Download failed.")
-                
 
         try:
             tw_ver = await download.json_(self.get(["RediveTW_DB"])[1])
@@ -92,7 +91,9 @@ class BotConfig:
                 json.dump(lastVersion, f)
             self.logger.info(f"Newest version: {lastVersion}")
 
-        self.game_data_version = GameDataVersion(jp_ver, tw_ver, datetime.now().strftime("%y/%m/%d %H:%M"))
+        self.game_data_version = GameDataVersion(
+            lastVersion["jp"], lastVersion["tw"], datetime.now().strftime("%y/%m/%d %H:%M")
+        )
 
     async def update_gacha_emojis(self, bot: Bot):
         self.logger.info("Fetching gacha emojis...")
