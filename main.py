@@ -15,7 +15,7 @@ from utils.game_data import GameDataServer
 from utils.state_manger import StateManger, State
 
 __author__ = "IanDesuyo"
-__version__ = "3.1.6"
+__version__ = "3.1.7"
 
 
 class AIKyaru(AutoShardedBot):

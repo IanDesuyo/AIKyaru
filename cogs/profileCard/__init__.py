@@ -77,7 +77,7 @@ class ProfileCard(commands.Cog):
         await ctx.send(embed=create_profile_embed(data))
 
     @cmd_profile.command(name="bind", brief="綁定遊戲ID", description="將Discord帳號與遊戲ID綁定", usage="<伺服器(1~4)> <遊戲ID(9位數)>")
-    async def cmd_bind(self, ctx: Context, server: int, uid: int):
+    async def cmd_bind(self, ctx: Context, server: int, uid: str):
         if server < 1 or server > 4:
             return ctx.send("伺服器錯誤, 請輸入1~4")
         await self._bind(ctx, server, uid)
@@ -100,16 +100,20 @@ class ProfileCard(commands.Cog):
                 ],
                 required=True,
             ),
-            create_option(name="遊戲id", description="9位數ID", option_type=4, required=True),
+            create_option(name="遊戲id", description="9位數ID", option_type=3, required=True),
         ],
         connector={"伺服器": "server", "遊戲id": "uid"},
     )
-    async def cog_bind(self, ctx: SlashContext, server: int, uid: int):
+    async def cog_bind(self, ctx: SlashContext, server: int, uid: str):
         await self._bind(ctx, server, uid)
 
-    async def _bind(self, ctx: Union[Context, SlashContext], server: int, uid: int):
-        if not re.match(r"^\d{9}$", str(uid)):
-            return await ctx.send("遊戲ID錯誤", hidden=True)
+    async def _bind(self, ctx: Union[Context, SlashContext], server: int, uid: str):
+        uid = uid.zfill(9)
+        if not re.match(r"^\d{9}$", uid):
+            if isinstance(ctx, SlashContext):
+                return await ctx.send("遊戲ID錯誤", hidden=True)
+            else:
+                return await ctx.send("遊戲ID錯誤")
 
         verify_code = secrets.token_hex(3).upper()
         buttons = deepcopy(verify_buttons)
@@ -127,6 +131,7 @@ class ProfileCard(commands.Cog):
     async def pref_user_link_uid(self, ctx: ComponentContext):
         # s = server, i = uid, v = verify_code, t = created_at
         data = un_pref_custom_id(custom_id="user.link_uid", data=ctx.custom_id)
+        data["i"] = data["i"].zfill(9)
 
         if datetime.now().timestamp() > data["t"] + 120:
             return await ctx.edit_origin(content="此驗證已過期", components=None)
