@@ -1,0 +1,41 @@
+name: Deploy to server
+
+on:
+  push:
+    branches:
+      - master
+      
+jobs:
+  build:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Executing remote ssh commands using ssh key
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd repos/AIKyaru
+            git pull origin master
+            COMMIT_ID=${{ github.sha }}
+            docker build -t aikyaru .
+            CONTAINER_ID=$(docker ps -a --format "table {{.ID}} {{.Names}}" -f "status=running" | awk 'NR>1 && $2 ~ /^aikyaru/ {print$1}')
+            [[ ! -z "$CONTAINER_ID" ]] && docker stop $CONTAINER_ID
+            docker run -d \
+              --name aikyaru_${COMMIT_ID:0:7} \
+              -e BOT_TOKEN=${{ secrets.BOT_TOKEN }} \
+              -v ${{ secrets.CONFIG_PATH }}/config.json:/app/config.json \
+              -v ${{ secrets.CONFIG_PATH }}/gameDB:/app/gameDB \
+              --restart unless-stopped \
+              --network mongo-network \
+              aikyaru
+            
+      - name: Send message to Discord
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: "deploy"
+          color: 0x4BB543
