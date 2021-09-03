@@ -66,12 +66,12 @@ class FetchRank:
             emonight = {}
             emonight["preferRank"] = row[cols["preferRank"]]["v"].replace("\n", " ")
             emonight["preferRarity"] = row[cols["preferRarity"]]["v"].replace("\n", " ") if cols.get("preferRarity") and row[cols["preferRarity"]] else "-"
-            emonight["comment"] = row[cols["comment"]]["v"].replace("\n", "")
+            emonight["comment"] = row[cols["comment"]]["v"].replace("\n", "") if row[cols["comment"]] else "-"
             emonight["pvp"] = row[cols["pvp"]]["v"] if row[cols["pvp"]] else "天下無雙"
             emonight["cb"] = row[cols["cb"]]["v"] if row[cols["cb"]] else "天下無雙"
             row_result["emonight"] = emonight
 
-            row_result["attackRange"] = row[cols["attackRange"]]["v"]
+            row_result["attackRange"] = row[cols["attackRange"]]["v"] if row[cols["attackRange"]] else "-"
             row_diff["hp"] = self.get_value(row[cols["hp"]])
             row_diff["atk"] = self.get_value(row[cols["atk"]])
             row_diff["magic_str"] = self.get_value(row[cols["magic_str"]])

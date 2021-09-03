@@ -39,11 +39,11 @@ class ProfileCard(commands.Cog):
     async def get_profile(self, server: int, uid: int, cache: bool = True):
         async with self.session.get(
             f"{self.apiUrl}/profile",
-            params={"server": server, "uid": uid, "cache": "true" if cache else "false"},
+            params={"server": server, "uid": str(uid).zfill(9), "cache": "true" if cache else "false"},
         ) as resp:
             data = await resp.json()
 
-        self.logger.info(f"get_profile /{server}/{uid}: {resp.status}")
+        self.logger.info(f"get_profile /{server}/{uid:09d}: {resp.status}")
 
         if resp.status == 404:
             raise errors.ProfileNotFound
@@ -131,7 +131,6 @@ class ProfileCard(commands.Cog):
     async def pref_user_link_uid(self, ctx: ComponentContext):
         # s = server, i = uid, v = verify_code, t = created_at
         data = un_pref_custom_id(custom_id="user.link_uid", data=ctx.custom_id)
-        data["i"] = data["i"].zfill(9)
 
         if datetime.now().timestamp() > data["t"] + 120:
             return await ctx.edit_origin(content="此驗證已過期", components=None)
