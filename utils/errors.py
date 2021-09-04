@@ -10,6 +10,7 @@ from utils import how_to_use
 import uuid
 import utils
 import traceback
+import asyncio
 
 
 class GameApiError(Exception):
@@ -56,6 +57,10 @@ class RecordDeleted(Exception):
     pass
 
 
+class GameProfileNotLinked(Exception):
+    pass
+
+
 async def handle_error(bot: Bot, ctx: Union[Context, SlashContext, ComponentContext], error):
     if isinstance(ctx, ComponentContext):
         # don't send new message, edit the origin one.
@@ -78,9 +83,14 @@ async def handle_error(bot: Bot, ctx: Union[Context, SlashContext, ComponentCont
         return await ctx.send(f"我沒有權限... 需要`{','.join(error.missing_perms)}`")
     if isinstance(error, commands.NoPrivateMessage):
         return await ctx.send("此功能僅限群組使用")
+    if isinstance(error, asyncio.TimeoutError):
+        return await ctx.send("與伺服器連線超時 :(")
+
 
     # game api errors
 
+    if isinstance(error, GameProfileNotLinked):
+        return await ctx.send("此用戶尚未綁定遊戲ID")
     if isinstance(error, ProfileNotFound):
         return ctx.send("找不到此玩家... 你還記得你的ID嗎?")
     if isinstance(error, GameApiError):

@@ -1,4 +1,5 @@
 import logging
+import aiohttp
 from discord_slash.context import ComponentContext
 from discord_slash.model import ButtonStyle
 from discord_slash.utils.manage_components import create_actionrow, create_button
@@ -41,7 +42,10 @@ class ProfileCard(commands.Cog):
             f"{self.apiUrl}/profile",
             params={"server": server, "uid": str(uid).zfill(9), "cache": "true" if cache else "false"},
         ) as resp:
-            data = await resp.json()
+            try:
+                data = await resp.json()
+            except:
+                raise errors.GameApiError
 
         self.logger.info(f"get_profile /{server}/{uid:09d}: {resp.status}")
 
