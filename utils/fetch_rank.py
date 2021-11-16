@@ -126,12 +126,15 @@ class FetchRank:
                 self.logger.error(f"Error {name} ({id})")
 
             nonplume = {}
-            nonplume["pvp"] = row[cols["pvp"]]["v"]
-            nonplume["cb"] = row[cols["cb"]]["v"]
-            nonplume["preferRank"] = row[cols["preferRank"]]["v"] if row[cols["preferRank"]] else "-"
-            nonplume["preferRarity"] = row[cols["preferRarity"]]["v"]
-            nonplume["comment"] = row[cols["comment"]]["v"]
-            self.result[id]["nonplume"] = nonplume
+            try:
+                nonplume["pvp"] = row[cols["pvp"]]["v"]
+                nonplume["cb"] = row[cols["cb"]]["v"]
+                nonplume["preferRank"] = row[cols["preferRank"]]["v"] if row[cols["preferRank"]] else "-"
+                nonplume["preferRarity"] = row[cols["preferRarity"]]["v"]
+                nonplume["comment"] = row[cols["comment"]]["v"]
+                self.result[id]["nonplume"] = nonplume
+            except:
+                pass
 
         self.source["nonplume"] = f"https://docs.google.com/spreadsheets/d/{self.nonplume_sheet['key']}/htmlview"
 

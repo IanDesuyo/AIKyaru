@@ -35,7 +35,7 @@ class GameData:
                 CASE a.rarity_odds WHEN 600000 THEN 1 ELSE 0 END rarity3_double
             FROM gacha_data a
             WHERE a.exchange_id != 0 AND a.gacha_times_limit10 != 1 AND (a.prizegacha_id != 0 OR a.gacha_bonus_id != 0) AND REPLACE(a.start_time, '/', '-') <= datetime('now', '+8 hours')
-            ORDER BY a.start_time DESC LIMIT 1
+            ORDER BY a.start_time DESC, a.gacha_bonus_id DESC LIMIT 1
             """,
         ).fetchone()
         data["unit_ids"] = [int(i[:4]) for i in data.get("unit_ids").split(",")]
